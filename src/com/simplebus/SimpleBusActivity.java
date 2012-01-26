@@ -5,6 +5,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.simplebus.data.SimpleBusTime;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,12 +16,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 
 public class SimpleBusActivity extends Activity {
 	private EditText editView;
 	private Button submitButton;
 	private ListView resultView;
 	private ResultAdapter resultAdapter;
+	private SimpleBusTime simpleBusTime;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -32,15 +37,33 @@ public class SimpleBusActivity extends Activity {
     	submitButton = (Button) findViewById(R.id.submit);
     	submitButton.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
-				Editable search = editView.getText();
-				search(search.toString());
-				
+				//Editable search = editView.getText();
+				//search(search.toString());
+				search(localRequest());
 			}
     		
     	});
     	resultView = (ListView) findViewById(R.id.list);
+    	simpleBusTime = new SimpleBusTime((TimePicker)findViewById(R.id.timePicker1),(DatePicker)findViewById(R.id.datePicker1));
     }
-    private void search(String s){  	
+    //Send to Server
+    private JSONObject localRequest(){
+    	Editable search = editView.getText();
+    	JSONObject data = new JSONObject();
+    	try {
+			data.put("bus", search.toString());
+			data.put("year",simpleBusTime.year);
+	    	data.put("month",simpleBusTime.month);
+	    	data.put("day",simpleBusTime.day);
+	    	data.put("hour",simpleBusTime.hour);
+	    	data.put("min",simpleBusTime.min);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+    	return data;    	
+    }
+    
+    private void search(JSONObject s){  	
     	try {
     		JSONObject data = new JSONObject();
         	data.put("data", s);
