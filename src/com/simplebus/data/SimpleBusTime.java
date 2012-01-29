@@ -31,6 +31,7 @@ public class SimpleBusTime {
 			}
 		});
 		this.tp.setIs24HourView(true);
+		this.tp.setCurrentHour(hour);
 		this.tp.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
 			public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
 				hour = hourOfDay;

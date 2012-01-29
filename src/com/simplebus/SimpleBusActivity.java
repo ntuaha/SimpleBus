@@ -53,7 +53,7 @@ public class SimpleBusActivity extends Activity {
     	try {
 			data.put("bus", search.toString());
 			data.put("year",simpleBusTime.year);
-	    	data.put("month",simpleBusTime.month);
+	    	data.put("month",simpleBusTime.month+1);
 	    	data.put("day",simpleBusTime.day);
 	    	data.put("hour",simpleBusTime.hour);
 	    	data.put("min",simpleBusTime.min);
