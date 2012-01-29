@@ -5,7 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.simplebus.data.SimpleBusTime;
+import com.simplebus.data.Information;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -20,54 +20,23 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 
 public class ResultActivity extends Activity {
-	private EditText editView;
-	private Button submitButton;
 	private ListView resultView;
 	private ResultAdapter resultAdapter;
-	private SimpleBusTime simpleBusTime;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.result);
         initialView();
+        String data = getIntent().getBundleExtra("data").getString("data");
+        search(data);
     }
     private void initialView(){
-    	editView = (EditText) findViewById(R.id.editText1);
-    	submitButton = (Button) findViewById(R.id.submit);
-    	submitButton.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				//Editable search = editView.getText();
-				//search(search.toString());
-				search(localRequest());
-			}
-    		
-    	});
     	resultView = (ListView) findViewById(R.id.list);
-    	simpleBusTime = new SimpleBusTime((TimePicker)findViewById(R.id.timePicker1),(DatePicker)findViewById(R.id.datePicker1));
     }
-    //Send to Server
-    private JSONObject localRequest(){
-    	Editable search = editView.getText();
-    	JSONObject data = new JSONObject();
+    private void search(String data){  	
     	try {
-			data.put("bus", search.toString());
-			data.put("year",simpleBusTime.year);
-	    	data.put("month",simpleBusTime.month+1);
-	    	data.put("day",simpleBusTime.day);
-	    	data.put("hour",simpleBusTime.hour);
-	    	data.put("min",simpleBusTime.min);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-    	return data;    	
-    }
-    
-    private void search(JSONObject s){  	
-    	try {
-    		JSONObject data = new JSONObject();
-        	data.put("data", s);
-			JSONObject result = ConnectSimpleBusServer.connectServer(data.toString());
+			JSONObject result = ConnectSimpleBusServer.connectServer(data);
 			JSONArray resultData = result.getJSONArray("data");
 			int size = resultData.length();
 			if(size!=0){
@@ -89,4 +58,4 @@ public class ResultActivity extends Activity {
 			e.printStackTrace();
 		}
     }
-}
+ }
